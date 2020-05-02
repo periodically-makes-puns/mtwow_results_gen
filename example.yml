@@ -1,0 +1,258 @@
+# For mathematical formulae:
+# - N = number of contestants TOTAL.
+# - X = number of contestants TO BE ELIMINATED.
+# - P = number of contestants PRIZING.
+
+texture_folder: textures
+# The folder where textures (backgrounds, labels, etc)
+
+avatar_folder: books
+# The folder where user books are stored.
+
+output_folder: output
+# The folder where output images are stored. Created if nonexistent.
+
+default_avatar: default
+# default_avatar is the filename (without extension) of the
+# default book to be used if no custom book is present.
+# Two special options exist for this option:
+# - two_letter, which creates the custom book based on the two-color scheme.
+# - blank, which makes all non-custom books blank.
+# two_letter is the default value for this option.
+
+results_file: results
+# Where the results are located. No file extension should be given!
+# The results MUST be in CSV form.
+
+result_format:
+  # Specifies how the results spreadsheet should be interpreted.
+  # This is a list of all supported variables.
+  # TODO: Add more variables
+  - rank
+  # Optional, as the program will determine this for you if left blank.
+  - contestant
+  # Note that this field is allowed to have duplicates.
+  # Duplicate values in this field will be assumed to be extra response prizes.
+  - response
+  - score
+  - stdev
+  - skew
+  - vote_count
+  - vrd[10]
+  # The 10 specifies the size of your voting screen, and will read
+  # that number of integers in to be treated as the number of votes with that
+  # particular value.
+  # 5 0 0 0 0 0 0 0 0 4 will be interpreted as 5 100% votes and 4 0% votes.
+  - hvrd[vote_count]
+  # Note: It is recommend that you pass in a VRD, not a HVRD!
+  # HVRDs are mostly variable length, while VRDs are always the size
+  # of your voting screen, which is constant across all responses.
+  # If you want to give vote data as an HVRD, you have to add a votes parameter
+  # BEFORE the hvrd is specified.
+
+sort_by: rank
+# This specifies the value that the program should sort by. This determines
+# the rank of the response!
+
+sort_reverse: false
+# If false, sorts ASCENDING. If true, sorts DESCENDING.
+
+result_style: leaderboard
+# The default style is leaderboard, which just generates an infobox for every
+# contestant and calls it a day.
+# Other valid options include:
+# - 1by1s
+#     Your classic 1-by-1 reveals, with descending contestants dropping to their
+#     dooms! If this is specified, an x-axis and y-axis variable must be
+#     specified, along with other optional values.
+#     THIS METHOD MAY TAKE LONGER TO GENERATE DUE TO VIDEOS TAKING LONGER
+#     THAN IMAGES TO PROCESS.
+# - riskboard
+#     This style uses the default style until there are 2X contestants left,
+#     Then, it displays a list of contestants at risk of elimination.
+#     After this point, it starts saving the topmost unrevealed contestant.
+#     Options allow this to also slay the bottommost unrevealed contestant.
+#     The program will automatically determine the layout of the contestants,
+#     unless overridden.
+# - bottoms_up
+#     This style reveals in reverse, because why the **** not.
+# - chaos_chaos
+#     CHAOS! CHAOS! AHAHAHAHAHAHAHAHAHAHAHAHA
+
+prize_count: 2
+# Overrides max(floor(0.1N), 10) calculation.
+
+death_count: 2
+# Overrides floor(0.2N) calculation.
+
+# These options are only for certain leaderboard styles!
+
+# Style: leaderboard
+ldrbd_options:
+  generic:
+    num_infoboxes: 6
+    # Number of contestants to be displayed per image.
+    prizer: accumulate
+    # Behavior when showing the top min(5, P) contestants.
+    # Default accumulates prizers until screen size reached or prizers run out.
+    # e.g. First screen = 1st place, Second screen = 1st and 2nd, etc.
+    # Other options:
+    # - default: Treats prizers normally.
+    # - 1by1: Shows them individually instead of accumulating.
+    elim: 1by1
+    # Behavior once elim threshold is sufficiently "close."
+    # Note: Elim behavior overrides prizer behavior if the two ranges specified
+    # overlap.
+    # Default shows contestants 1 by 1 until the threshold is hit.
+    # This begins at min(5, 0.1N) contestants left before the elim threshold.
+    # Other options:
+    # - batch_descending:
+    #     The offset is bumped up to min(7, 0.2N) contestants.
+    #     Once this is reached, the contestants will be revealled in batches of 3,
+    #     then 2, then 1, until the threshold is hit.
+    prize_bg: 0xbfb522
+    # If a number is specified, the number will be converted into the hex color.
+    # The background will be filled with this colour.
+    # Specify multiple values here to rotate between them.
+    # Which texture to use for the prizers' background. File extension IS necessary.
+    alive_bg: 0xd3c1d3
+    # Which texture to use for alive contestants' backgrounds.
+    dead_bg: 0xab5548
+    # Which texture to use for dead contestants' backgrounds.
+    erp_bg: 0xb3b3b3
+    # Which texture to use for extra response prizes.
+  infobox:
+    width: 1200
+    height: 200
+    constant:
+      # constant: for parts that do not change between contestants.
+      - text:
+          x: 775
+          y: 50
+          align: center
+          value: SCORE
+          font_size: 24
+          font: Arial
+      - text:
+          enabled: false
+          x: 925
+          y: 50
+          align: center
+          value: STDEV
+          font_size: 24
+          font: Arial
+      - text:
+          x: 925
+          y: 50
+          align: center
+          value: SKEW
+          font_size: 24
+          font: Arial
+      - image:
+          x: 0
+          y: 0
+          value: giant_x
+          # which file should be used from the textures folder.
+          rotate: 20
+          # How many degrees to rotate CCW from the starting position.
+          # It is advised to use align: center with this to ensure the center
+          # of rotation is known.
+          z: 2
+          # where the image should be rendered in relation to everything else.
+          # Higher z values are on top. All constants default to z = 0,
+          # all variates default to z = 1. Items with the same z-value depend
+          # on which is later in the config file (stable sorting ftw).
+    variant:
+      # variant: for parts that change between contestants.
+      avatar:
+        width: 160
+        height: 160
+        x: 200
+        y: 100
+        align: center
+        # align: center is treated as h_align: center; v_align: center
+      rank:
+        x: 100
+        y: 100
+        align: center
+        font_size: 72
+        font: Arial
+      rank_abbrev:
+        # The st, nd, rd, and th in 1st, 2nd, 3rd, and 4th.
+        enabled: true
+        superscript: true
+        # Otherwise it will just be part of the rank name.
+        font_size: 24
+        # Only matters if it's a superscript.
+      name:
+        x: 300
+        y: 50
+        max_width: 400
+        v_align: center
+        font_size:
+          - 24
+          - 16
+        # Font sizes will be tried starting at the top, descending until one fits
+        # the max specified width.
+        # If none fit, it will brute force the largest font size that fits.
+        # If no integer font size fits, it will throw a error at you and give up.
+        font: Arial
+      response:
+        x: 300
+        y: 150
+        max_width: 400
+        v_align: center
+        font_size:
+          - 16
+          - 12
+        font: Arial
+      score:
+        x: 775
+        y: 150
+        max_width: 100
+        align: center
+        font_size:
+          - 24
+          - 16
+        font: Arial
+      skew:
+        x: 925
+        y: 150
+        max_width: 100
+        align: center
+        font_size:
+          - 24
+          - 16
+        font: Arial
+      stdev:
+        # You can specify both skew and stdev, and they will both be shown if
+        # given. If you give both, you must disable one of these using:
+        enabled: false
+        x: 925
+        y: 150
+        max_width: 100
+        align: center
+        font_size:
+          - 24
+          - 16
+        font: Arial
+      vrd:
+        x: 1100
+        y: 100
+        width: 176
+        height: 180
+        spacing: 4
+        bar_width: 14
+        dividing_lines: true
+        # These lines indicate a single vote. Can be turned off if there are too
+        # many votes to warrant showing them.
+      hvrd:
+        # Note: This is not mutually exclusive with VRD. Delete it, or use:
+        enabled: false
+        # to disable it.
+        x: 1100
+        y: 100
+        width: 180
+        height: 180
+        # spacing/width should not be specified. It will be followed if given
+        # but it is a much better idea to let the program do it by itself.

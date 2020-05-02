@@ -1,0 +1,29 @@
+texture_folder: textures
+avatar_folder: books
+output_folder: output
+default_avatar: two_letter
+results_file: results
+result_format:
+  - rank
+  - contestant
+  - response
+  - score
+  - stdev
+  - skew
+  - vote_count
+  - vrd[10]
+sort_by: rank
+sort_reverse: false
+result_style: leaderboard
+ldrbd_options:
+  generic:
+    num_infoboxes: 6
+    prizer: accumulate
+    elim: 1by1
+    prize_bg: 0xbfb522
+    alive_bg: 0xd3c1d3
+    dead_bg: 0xab5548
+    erp_bg: 0xb3b3b3
+  infobox:
+    width: 1200
+    height: 200
